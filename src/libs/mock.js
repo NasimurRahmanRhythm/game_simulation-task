@@ -7,7 +7,6 @@ export default teams = {
     India : ["Rohit Sharma (c)", "Ishan Kishan", "Virat Kohli", "Shreyas Iyer", "KL Rahul (wk)", "Hardik Pandya", "Ravindra Jadeja", "Ravichandran Ashwin", "Kuldeep Yadav", "Jasprit Bumrah", "Mohammed Siraj"],
     Netherlands: ["Vikramjit Singh", "Max ODowd", "Colin Ackermann", "Bas de Leede", "Teja Nidamanuru", "Scott Edwards (c & wk)", "Sybrand Engelbrecht", "Logan van Beek", "Roelof van der Merwe", "Aryan Dutt", "Paul van Meekeren"],
     Pakistan : ["Imam-ul-Haq", "Fakhar Zaman", "Babar Azam (c)", "Mohammad Rizwan (wk)", "Saud Shakeel", "Iftikhar Ahmed", "Shadab Khan", "Mohammad Nawaz", "Hasan Ali", "Shaheen Afridi", "Haris Rauf"],
-    sadgnuafhiguadgiuauanogafnijgn
     SouthAfrica: ["Quinton de Kock (wk)", "Temba Bavuma (c)", "Rassie van der Dusen", "Aiden Markram", "Heinrich Klaasen", "David Miller", "Marco Jansen", "Kagiso Rabada", "Keshav Maharaj", "Lungi Ngidi", "Gerald Coetzee"],
     Afghanistan : ["Rahmanullah Gurbaz (wk)", "Ibrahim Zadran", "Rahmat Shah", "Hashmatullah Shahidi (c)", "Mohammad Nabi", "Najibullah Zadran", "Azmatullah Omarzai", "Rashid Khan", "Mujeeb Ur Rahman", "Naveen-ul-Haq", "Fazalhaq Farooqi"]
 };
