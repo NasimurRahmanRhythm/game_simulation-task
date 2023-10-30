@@ -1,5 +1,5 @@
-export default players = {
-    Bangladesh : ["Tanzid Hasan","Litton Das","Mehidy Hasan Miraz","Najmul Hossain Shanto","Shakib Al Hasan (c)","Mushfiqur Rahim (wk)","Towhid Hridoy","Mahmudullah","Taskin Ahmed","Shoriful Islam","Mustafizur Rahman"],
+const players = {
+    Bangladesh : ["Tanzid Hasan","Litton Das","Mehidy Hasan Miraz","Najmul Hossain Shanto","Shakib Al Hasan (c)","Mushfiqur Rahim (wk)","Towhid Hridoy","Mahmudullah Riyad","Taskin Ahmed","Shoriful Islam","Mustafizur Rahman"],
     SriLanka: ["Pathum Nissanka", "Kusal Perera", "Kusal Mendis (c & wk)", "Sadeera Samarawickrama", "Charith Asalanka", "Dhananjaya de Silva", "Angelo Mathews", "Maheesh Theekshana", "Kasun Rajitha", "Lahiru Kumara", "Dilshan Madushanka"],
     England : ["Jonny Bairstow", "Dawid Malan", "Joe Root", "Harry Brook", "Moeen Ali", "Jos Buttler (wk/c)", "Liam Livingstone", "Sam Curran", "Chris Woakes", "Adil Rashid", "Mark Wood"],
     NewZeLand: ["Devon Conway", "Will Young", "Rachin Ravindra", "Daryl Mitchell", "Tom Latham (c & wk)", "Glenn Phillips", "Mark Chapman", "Mitchell Santner", "Matt Henry", "Lockie Ferguson", "Trent Boult"],
@@ -10,6 +10,8 @@ export default players = {
     SouthAfrica: ["Quinton de Kock (wk)", "Temba Bavuma (c)", "Rassie van der Dusen", "Aiden Markram", "Heinrich Klaasen", "David Miller", "Marco Jansen", "Kagiso Rabada", "Keshav Maharaj", "Lungi Ngidi", "Gerald Coetzee"],
     Afghanistan : ["Rahmanullah Gurbaz (wk)", "Ibrahim Zadran", "Rahmat Shah", "Hashmatullah Shahidi (c)", "Mohammad Nabi", "Najibullah Zadran", "Azmatullah Omarzai", "Rashid Khan", "Mujeeb Ur Rahman", "Naveen-ul-Haq", "Fazalhaq Farooqi"]
 };
+
+export default players;
 
 
 

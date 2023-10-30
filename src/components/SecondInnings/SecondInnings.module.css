@@ -1,0 +1,78 @@
+.container {
+    text-align: center;
+  }
+
+  .teamsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .homeTeams,
+  .opponentTeams {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .homeTeams .team {
+    /* width: 150px;
+    height: 50px;
+    line-height: 50px; */
+    height: auto;
+    margin: 5px;
+    border-radius: 10px;
+    margin: 3px 0;
+    font-weight: bold;
+    text-align: center; 
+    cursor: pointer; 
+    margin-right: 10px;
+    padding: 10px;
+    background-color: rgb(68, 68, 223);
+    transition: background-color 0.3s, color 0.3s; 
+  }
+
+
+  .play {
+    cursor: pointer; 
+  }
+  .opponentTeams .team {
+    height: auto;
+    margin: 5px;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center; 
+    cursor: pointer; 
+    margin-right: 10px;
+    padding: 10px;
+    background-color: red;
+    transition: background-color 0.3s, color 0.3s; 
+  }
+
+  /* styles.module.css */
+
+.small-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: black;
+    border: 2px solid #000;
+  }
+  
+  .small-circle.green {
+    background: green;
+  }
+  
+  .small-circle.pink {
+    background: pink;
+  }
+  
+  .small-circle.red {
+    background: red;
+  }
+  

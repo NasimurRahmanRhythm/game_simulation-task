@@ -2,13 +2,15 @@ import styles from '@/styles/Home.module.css';
 import teams from '@/libs/teams';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const [homeTeam, setHomeTeam] = useState(null);
-  const [opponentTeam, setOpponentTeam] = useState(null);
+  const [homeTeam, setHomeTeam] = useState('');
+  const [opponentTeam, setOpponentTeam] = useState('');
   const [isToss,setIsToss] = useState(false);
-  const [text,setText] = useState(null);
-  const [winner,setWinner] = useState(null);
+  const [text,setText] = useState('');
+  const [winner,setWinner] = useState('');
+  const router = useRouter();
 
   const selectTeam = (team, isHomeTeam) => {
     if (isHomeTeam) {
@@ -22,7 +24,7 @@ export default function Home() {
 
   const tossTeams = () => {
     setIsToss(true);
-    const tossResult = [" won the toss and selected to bat first", " won the toss and selected to field first"];
+    const tossResult = ["bat", "field"];
     const tossWinner = [homeTeam,opponentTeam];
     const idx = Math.floor(Math.random() * tossResult.length);
     setText(tossResult[idx]);
@@ -30,6 +32,10 @@ export default function Home() {
     setWinner(tossWinner[x]);
 
   };
+
+  const playMatch = () => {
+    router.push(`/play-match?homeTeam=${homeTeam}&opponentTeam=${opponentTeam}&winner=${winner}&tossResult=${text}`)
+  }
 
   return (
     <div className={styles.container}>
@@ -67,12 +73,10 @@ export default function Home() {
         </div>
       )}
       {isToss && (
-        <div className={styles.chooseText}>{winner}{text}</div>
+        <div className={styles.chooseText}>{winner} won the toss and elected to {text} first
+        <div onClick={playMatch}><h1>Lets play</h1></div></div>
       )}
       </div>
-      {/* {isToss && (
-        <div>Let's play</div>
-      )} */}
         <div className={styles.opponentTeams}>
           {teams.map((team, index) => (
             <div
