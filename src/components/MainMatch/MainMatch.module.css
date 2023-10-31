@@ -1,78 +1,111 @@
 .container {
-    text-align: center;
-  }
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
 
-  .teamsContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .homeTeams,
-  .opponentTeams {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
+.teamContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
 
-  .homeTeams .team {
-    /* width: 150px;
-    height: 50px;
-    line-height: 50px; */
-    height: auto;
-    margin: 5px;
-    border-radius: 10px;
-    margin: 3px 0;
-    font-weight: bold;
-    text-align: center; 
-    cursor: pointer; 
-    margin-right: 10px;
-    padding: 10px;
-    background-color: rgb(68, 68, 223);
-    transition: background-color 0.3s, color 0.3s; 
-  }
+.team {
+  height: 50px;
+  border-radius: 10px;
+  margin: 5px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  margin-right: 10px;
+  padding: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
 
+.homeTeams .team {
+  background-color: rgb(68, 68, 223);
+  color: white;
+}
 
-  .play {
-    cursor: pointer; 
-  }
-  .opponentTeams .team {
-    height: auto;
-    margin: 5px;
-    border-radius: 10px;
-    margin-top: 10px;
-    font-weight: bold;
-    text-align: center; 
-    cursor: pointer; 
-    margin-right: 10px;
-    padding: 10px;
-    background-color: red;
-    transition: background-color 0.3s, color 0.3s; 
-  }
+.opponentTeams .team {
+  background-color: red;
+  color: white;
+}
 
-  /* styles.module.css */
+.play {
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
 
 .small-circle {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    color: black;
-    border: 2px solid #000;
-  }
-  
-  .small-circle.green {
-    background: green;
-  }
-  
-  .small-circle.pink {
-    background: pink;
-  }
-  
-  .small-circle.red {
-    background: red;
-  }
-  
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: black;
+  border: 2px solid #000;
+  margin-right: 5px;
+}
+
+.small-circle.green {
+  background: green;
+  color: white;
+}
+
+.small-circle.pink {
+  background: pink;
+  color: white;
+}
+
+.small-circle.red {
+  background: red;
+  color: white;
+}
+
+.batsman {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.bowler {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.total {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.second {
+  margin-top: 20px;
+}
+
+.commentary {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}

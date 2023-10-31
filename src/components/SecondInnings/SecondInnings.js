@@ -4,32 +4,42 @@ import Commentary from "../Commentary/Commentary";
 import styles from "@/components/SecondInnings/SecondInnings.module.css";
 import Router, { useRouter } from "next/router";
 
-const SecondInnings = ({first, second, opponentScore}) => {
-    const [strike, setStrike] = useState();
-    const [nonstrike, setNonstrike] = useState();
-    const [bowler, setBowler] = useState();
-    const [bat, setBat] = useState(2);
-    const [over, setOver] = useState(0);
-    const [ballCount, setBallCount] = useState(0);
-    const [ball, setBall] = useState(true);
-    const [run, setRun] = useState();
-    const [totalRun, setTotalRun] = useState(0);
-    const [wicket,setWicket] = useState(0);
-    const [batFirst,setBatFirst] = useState('');
-    const [batSecond,setBatSecond] = useState('');
-    const router = useRouter();
-    const { homeTeam, opponentTeam, winner, tossResult } = router.query;
-    useEffect(() => {
-        if ((homeTeam === winner && tossResult === 'bat') || (opponentTeam === winner && tossResult === 'field')) {
-          setBatFirst(homeTeam);
-          setBatSecond(opponentTeam);
-        } else {
-          setBatFirst(opponentTeam);
-          setBatSecond(homeTeam);
-        }
-      }, [homeTeam, winner, opponentTeam, tossResult]);
-  
-    const choosePlayer = (player) => {
+const SecondInnings = ({ first, second, opponentScore }) => {
+  const [strike, setStrike] = useState();
+  const [nonstrike, setNonstrike] = useState();
+  const [bowler, setBowler] = useState();
+  const [bat, setBat] = useState(2);
+  const [over, setOver] = useState(0);
+  const [ballCount, setBallCount] = useState(0);
+  const [ball, setBall] = useState(true);
+  const [run, setRun] = useState();
+  const [totalRun, setTotalRun] = useState(0);
+  const [wicket, setWicket] = useState(0);
+  const [batFirst, setBatFirst] = useState("");
+  const [batSecond, setBatSecond] = useState("");
+  const [overRun, setOverRun] = useState([]);
+  const [homeBatScoreCard, setHomeBatScoreCard] = useState({});
+  const [opBowlScoreCard, setOpBowlScoreCard] = useState({});
+  const router = useRouter();
+
+  const { homeTeam, opponentTeam, winner, tossResult } = router.query;
+  useEffect(() => {
+    if (
+      (homeTeam === winner && tossResult === "bat") ||
+      (opponentTeam === winner && tossResult === "field")
+    ) {
+      setBatFirst(homeTeam);
+      setBatSecond(opponentTeam);
+    } else {
+      setBatFirst(opponentTeam);
+      setBatSecond(homeTeam);
+    }
+  }, [homeTeam, winner, opponentTeam, tossResult]);
+
+  const choosePlayer = (player) => {
+    if (homeBatScoreCard[player]?.played === true) {
+      toast.error("You have already choosen this player");
+    } else {
       if (bat === 0) {
         toast.error("You have already chosen two players");
       } else if (bat === 2) {
@@ -44,124 +54,201 @@ const SecondInnings = ({first, second, opponentScore}) => {
           setBat(bat - 1);
         }
       }
-    };
-  
-    const chooseBowler = (player) => {
+    }
+  };
+
+  const chooseBowler = (player) => {
+    if (opBowlScoreCard[player]?.played === true) {
+      toast.error("You have already choosen this bowler");
+    } else {
       if (ball) {
         setBowler(player);
         setBall(false);
       }
-    };
-  
-    const play = () => {
-      if(bat!==0 || ball === true){
-          toast.error('Choose batsmen and bowler');
-      }
-      else {
-        const runs = [1, 2, 3, 4, 6, "W"];
-        const idx = Math.floor(Math.random() * runs.length);
-        setRun(runs[idx]);
-        if(runs[idx] === 'W'){
-            setWicket(wicket+1);
-          }
-          else{
-            setTotalRun(totalRun+runs[idx]);
-          }
-        setBallCount(ballCount+1);
-        setOver(ballCount/6)
     }
   };
-  
+
+  const play = () => {
+    if (bat !== 0 || ball === true) {
+      toast.error("Choose batsmen and bowler");
+    } else {
+      const runs = [1, 2, 3, 4, 6, "W"];
+      const idx = Math.floor(Math.random() * runs.length);
+      setRun(runs[idx]);
+      const newOverRun = [...overRun, runs[idx]];
+      if (newOverRun.length - 1 === 6) {
+        setOverRun([runs[idx]]);
+      } else {
+        setOverRun(newOverRun);
+      }
+      if (runs[idx] !== "W") {
+        setTotalRun(totalRun + runs[idx]);
+      }
+      setBallCount(ballCount + 1);
+      setOver(ballCount / 6);
+    }
+  };
+
   const runScore = () => {
-    if (run === 1 || run === 3 || ballCount%6===0) {
+    if (run === 1 || run === 3) {
       const temp = nonstrike;
       setNonstrike(strike);
       setStrike(temp);
-      if(ballCount%6===0 && over>0){
-          setBowler('');
-          setBall(true);
-          toast.success('Choose a bowler');
-      }
     } else if (run === "W") {
+      setWicket(wicket + 1);
       setBat(1);
-      setStrike('');
-      console.log("bat is ",bat);
+      setStrike("");
+      console.log("bat is ", bat);
+    }
+    if (ballCount % 6 === 0 && over > 0) {
+      setBowler("");
+      setBall(true);
     }
     console.log("Striker is ", strike);
     console.log("Non Striker is ", nonstrike);
-  }
-  
-    useEffect(()=> {
-      runScore();
-      },[ballCount]);
-  
+  };
 
-      
-    return (
-      <div>
-        <div className={styles.container}>
-          <div className={styles.teamContainer}>
-            <div className={styles.homeTeams}>
-              <div>
-                <p></p>
+  useEffect(() => {
+    if (run !== "W") {
+      setHomeBatScoreCard((prevScoreCard) => ({
+        ...prevScoreCard,
+        [strike]: {
+          run: (prevScoreCard[strike]?.run || 0) + run,
+          ball: (prevScoreCard[strike]?.ball || 0) + 1,
+          played: true,
+        },
+      }));
+    }
+  }, [ballCount]);
+
+  useEffect(() => {
+    if (run === "W") {
+      setOpBowlScoreCard((prevScoreCard) => ({
+        ...prevScoreCard,
+        [bowler]: {
+          wicket: (prevScoreCard[bowler]?.wicket || 0) + 1,
+          run: prevScoreCard[bowler]?.run || 0,
+          played: true,
+        },
+      }));
+    } else {
+      setOpBowlScoreCard((prevScoreCard) => ({
+        ...prevScoreCard,
+        [bowler]: {
+          wicket: prevScoreCard[bowler]?.wicket || 0,
+          run: (prevScoreCard[bowler]?.run || 0) + run,
+          played: true,
+        },
+      }));
+    }
+  }, [ballCount]);
+
+  useEffect(() => {
+    runScore();
+  }, [ballCount]);
+
+  const goToScoreBoard = () => {
+    router.push(`/scoreboard?homeTeam=${batFirst}&opponentTeam=${batSecond}`);
+  }
+
+  console.log(homeBatScoreCard);
+  console.log(opBowlScoreCard);
+  localStorage.setItem("teamBBat", JSON.stringify(homeBatScoreCard));
+  localStorage.setItem("teamABowl", JSON.stringify(opBowlScoreCard));
+  return (
+    <div>
+      <div className={styles.container}>
+        <div className={styles.teamContainer}>
+          <div className={styles.homeTeams}>
+            <div>
+              <p></p>
+            </div>
+            {first.map((player) => (
+              <div className={styles.team} onClick={() => choosePlayer(player)}>
+                {player}
               </div>
-              {first.map((player) => (
-                <div className={styles.team} onClick={() => choosePlayer(player)}>
-                  {player}
+            ))}
+          </div>
+          <div className={styles.centered}>
+            <div className={styles.batsman}>
+              Batsman:
+              <p>{strike}</p>
+              <p>{nonstrike}</p>
+            </div>
+            <div className={styles.bowler}>
+              Bowler:
+              <p>{bowler}</p>
+            </div>
+            {ballCount !== 18 && (
+              <div className={styles.play} onClick={play}>
+                Play
+              </div>
+            )}
+            <div className={styles.row}>
+              {overRun.map((run, index) => (
+                <div
+                  key={index}
+                  className={
+                    run === 4
+                      ? styles["small-circle"] + " " + styles.green
+                      : run === 6
+                      ? styles["small-circle"] + " " + styles.pink
+                      : run === "W"
+                      ? styles["small-circle"] + " " + styles.red
+                      : styles["small-circle"]
+                  }
+                >
+                  {run}
                 </div>
               ))}
             </div>
-            <div className={styles.opponentTeams}>
-              {second.map((player) => (
-                <div className={styles.team} onClick={() => chooseBowler(player)}>
-                  {player}
-                </div>
-              ))}
+            <div className={styles.commentary}>
+              <Commentary
+                run={run}
+                strike={strike}
+                nonstrike={nonstrike}
+                bowler={bowler}
+                ballCount={ballCount}
+                over={over}
+              />
             </div>
+            <div className={styles.total}>
+              Total Run:
+              <p>
+                {totalRun}/{wicket}
+              </p>
+            </div>
+            {(ballCount === 18 || totalRun > opponentScore) && (
+              <div className={styles.chooseText}>
+                {totalRun > opponentScore ? (
+                  <div>
+                    <div className={styles.score}>{batSecond} won the game by {10 - wicket} wickets</div>
+                    <div className={styles.play} onClick={goToScoreBoard}>
+                      Go to ScoreBoard
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className={styles.score}>{batFirst} won the game by {opponentScore - totalRun} runs</div>
+                    <div className={styles.play} onClick={goToScoreBoard}>
+                      Go to ScoreBoard
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <div className={styles.opponentTeams}>
+            {second.map((player) => (
+              <div className={styles.team} onClick={() => chooseBowler(player)}>
+                {player}
+              </div>
+            ))}
           </div>
         </div>
-        <div>
-          Batsman:
-          <p>{strike}</p>
-          <p>{nonstrike}</p>
-        </div>
-        <div>
-          Bowler:
-          <p>{bowler}</p>
-        </div>
-        <div>
-        {ballCount !== 18 && <div className={styles.play} onClick={play}>
-          Play
-        </div>}
-          {run !== undefined && (
-            <div
-              className={
-                run === 4
-                  ? styles['small-circle'] + ' ' + styles.green
-                  : run === 6
-                  ? styles['small-circle'] + ' ' + styles.pink
-                  : run === "W"
-                  ? styles['small-circle'] + ' ' + styles.red
-                  : styles['small-circle']
-              }
-            >
-              {run}
-            </div>
-          )}
-          <p>
-          Total Run:{" "}
-          <p>
-            {totalRun}/{wicket}
-          </p>
-        </p>
-          <Commentary run = {run} strike = {strike} nonstrike = {nonstrike} bowler={bowler} ballCount={ballCount} over={over}/>
-          {(ballCount === 18 || totalRun>opponentScore) && <div>
-            {totalRun>opponentScore ? (<div>{batSecond} won the game by {10-wicket} wickets</div>) :
-                (<div>{batFirst} won the game by {opponentScore-totalRun} runs</div>)}
-            </div>}
-        </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default SecondInnings;

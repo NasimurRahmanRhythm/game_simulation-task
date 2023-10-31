@@ -24,10 +24,10 @@ const Commentary = ({run, strike, nonstrike, bowler, ballCount, over}) => {
         "short Leg"
     ];
 
-    const out = ["run out", "caught", "bold", "LBW"];
+    const out = ["caught", "bold", "LBW"];
     useEffect(()=> {
         if(run===1){
-            const comment = strike + " score one run. Putting " + nonstrike + " into the bat.";
+            const comment = strike + " score one run. Putting " + nonstrike + " into the strike.";
             setText(comment);
         }
         else if(run === 2){
@@ -35,7 +35,7 @@ const Commentary = ({run, strike, nonstrike, bowler, ballCount, over}) => {
             setText(comment);
         }
         else if(run === 3){
-            const comment = strike + " score one run. Putting " + nonstrike + " into the bat.";
+            const comment = strike + " score three run. Putting " + nonstrike + " into the strike.";
             setText(comment);
         }
         else if(run === 4){

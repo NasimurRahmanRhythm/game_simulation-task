@@ -15,30 +15,40 @@ const MainMatch = ({ first, second }) => {
   const [run, setRun] = useState();
   const [totalRun, setTotalRun] = useState(0);
   const [wicket, setWicket] = useState(0);
-  const [overRun, setOverRun]= useState([]);
+  const [overRun, setOverRun] = useState([]);
+  const [homeBatScoreCard, setHomeBatScoreCard] = useState({});
+  const [opBowlScoreCard, setOpBowlScoreCard] = useState({});
 
   const choosePlayer = (player) => {
-    if (bat === 0) {
-      toast.error("You have already chosen two players");
-    } else if (bat === 2) {
-      setStrike(player);
-      setBat(bat - 1);
+    if (homeBatScoreCard[player]?.played === true) {
+      toast.error("You have already choosen this player");
     } else {
-      if (strike) {
-        setNonstrike(player);
-        setBat(bat - 1);
-      } else {
+      if (bat === 0) {
+        toast.error("You have already chosen two players");
+      } else if (bat === 2) {
         setStrike(player);
         setBat(bat - 1);
+      } else {
+        if (strike) {
+          setNonstrike(player);
+          setBat(bat - 1);
+        } else {
+          setStrike(player);
+          setBat(bat - 1);
+        }
       }
     }
   };
 
   const chooseBowler = (player) => {
+    if(opBowlScoreCard[player]?.played === true){
+      toast.error('You have already choosen this bowler');
+    }else {
     if (ball) {
       setBowler(player);
       setBall(false);
     }
+  }
   };
 
   const play = () => {
@@ -48,10 +58,13 @@ const MainMatch = ({ first, second }) => {
       const runs = [1, 2, 3, 4, 6, "W"];
       const idx = Math.floor(Math.random() * runs.length);
       setRun(runs[idx]);
-      setOverRun(...overRun, runs[idx]);
-      if (runs[idx] === "W") {
-        setWicket(wicket + 1);
+      const newOverRun = [...overRun, runs[idx]];
+      if (newOverRun.length - 1 === 6) {
+        setOverRun([runs[idx]]);
       } else {
+        setOverRun(newOverRun);
+      }
+      if (runs[idx] !== "W") {
         setTotalRun(totalRun + runs[idx]);
       }
       setBallCount(ballCount + 1);
@@ -65,6 +78,7 @@ const MainMatch = ({ first, second }) => {
       setNonstrike(strike);
       setStrike(temp);
     } else if (run === "W") {
+      setWicket(wicket + 1);
       setBat(1);
       setStrike("");
       console.log("bat is ", bat);
@@ -72,16 +86,54 @@ const MainMatch = ({ first, second }) => {
     if (ballCount % 6 === 0 && over > 0) {
       setBowler("");
       setBall(true);
-      toast.success("Choose a bowler");
     }
     console.log("Striker is ", strike);
     console.log("Non Striker is ", nonstrike);
   };
 
   useEffect(() => {
+    if (run !== "W") {
+      setHomeBatScoreCard((prevScoreCard) => ({
+        ...prevScoreCard,
+        [strike]: {
+          run: (prevScoreCard[strike]?.run || 0) + run,
+          ball: (prevScoreCard[strike]?.ball || 0) + 1,
+          played: true,
+        },
+      }));
+    }
+  }, [ballCount]);
+
+  useEffect(() => {
+    if (run === "W") {
+      setOpBowlScoreCard((prevScoreCard) => ({
+        ...prevScoreCard,
+        [bowler]: {
+          wicket: (prevScoreCard[bowler]?.wicket || 0) + 1,
+          run: prevScoreCard[bowler]?.run || 0,
+          played: true,
+        },
+      }));
+    } else {
+      setOpBowlScoreCard((prevScoreCard) => ({
+        ...prevScoreCard,
+        [bowler]: {
+          wicket: prevScoreCard[bowler]?.wicket || 0,
+          run: (prevScoreCard[bowler]?.run || 0) + run,
+          played: true,
+        },
+      }));
+    }
+  }, [ballCount]);
+
+  useEffect(() => {
     runScore();
   }, [ballCount]);
 
+  console.log(homeBatScoreCard);
+  console.log(opBowlScoreCard);
+  localStorage.setItem("teamABat", JSON.stringify(homeBatScoreCard));
+  localStorage.setItem("teamBBowl", JSON.stringify(opBowlScoreCard));
   return (
     <div>
       <div className={styles.container}>
@@ -96,6 +148,56 @@ const MainMatch = ({ first, second }) => {
               </div>
             ))}
           </div>
+          <div className={styles.centered}>
+            <div className={styles.batsman}>
+              Batsman:
+              <p>{strike}</p>
+              <p>{nonstrike}</p>
+            </div>
+            <div className={styles.bowler}>
+              Bowler:
+              <p>{bowler}</p>
+            </div>
+            {ballCount !== 18 && (
+              <div className={styles.play} onClick={play}>
+                Play
+              </div>
+            )}
+            <div className={styles.row}>
+              {overRun.map((run, index) => (
+                <div
+                  key={index}
+                  className={
+                    run === 4
+                      ? styles["small-circle"] + " " + styles.green
+                      : run === 6
+                      ? styles["small-circle"] + " " + styles.pink
+                      : run === "W"
+                      ? styles["small-circle"] + " " + styles.red
+                      : styles["small-circle"]
+                  }
+                >
+                  {run}
+                </div>
+              ))}
+            </div>
+            <div className={styles.commentary}>
+              <Commentary
+                run={run}
+                strike={strike}
+                nonstrike={nonstrike}
+                bowler={bowler}
+                ballCount={ballCount}
+                over={over}
+              />
+            </div>
+            <div className={styles.total}>
+              Total Run:
+              <p>
+                {totalRun}/{wicket}
+              </p>
+            </div>
+          </div>
           <div className={styles.opponentTeams}>
             {second.map((player) => (
               <div className={styles.team} onClick={() => chooseBowler(player)}>
@@ -104,51 +206,8 @@ const MainMatch = ({ first, second }) => {
             ))}
           </div>
         </div>
-      </div>
-      <div>
-        Batsman:
-        <p>{strike}</p>
-        <p>{nonstrike}</p>
-      </div>
-      <div>
-        Bowler:
-        <p>{bowler}</p>
-      </div>
-      <div>
-        {ballCount !== 18 && <div className={styles.play} onClick={play}>
-          Play
-        </div>}
-        {run !== undefined && (
-          <div
-            className={
-              run === 4
-                ? styles["small-circle"] + " " + styles.green
-                : run === 6
-                ? styles["small-circle"] + " " + styles.pink
-                : run === "W"
-                ? styles["small-circle"] + " " + styles.red
-                : styles["small-circle"]
-            }
-          >
-            {run}
-          </div>
-        )}
-        <Commentary
-          run={run}
-          strike={strike}
-          nonstrike={nonstrike}
-          bowler={bowler}
-          ballCount={ballCount}
-          over={over}
-        />
-        <p>
-          Total Run:{" "}
-          <p>
-            {totalRun}/{wicket}
-          </p>
-        </p>
         {ballCount === 18 && (
-          <div>
+          <div className={styles.second}>
             <SecondInnings
               first={second}
               second={first}

@@ -1,0 +1,20 @@
+.scoreboardContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.batting, .bowling {
+    flex: 1;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.team {
+    font-weight: bold;
+}
+
+.player {
+    margin: 5px 0;
+}

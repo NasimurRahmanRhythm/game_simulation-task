@@ -76,7 +76,7 @@
 .selectedTeams {
   display: flex;
   justify-content: space-between;
-  margin-top: 1px; /* Adjust the margin-top to control spacing between selected teams */
+  margin-top: 1px; 
 }
 
 .selectedTeam {
@@ -98,19 +98,40 @@
 .button {
   width: 100px;
   height: 100px;
-  background-color: rgb(10, 10, 232); /* Initial background color */
+  background-color: rgb(10, 10, 232); 
   color: white;
   border: none;
-  border-radius: 50%; /* Make the button round */
+  border-radius: 50%; 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s; /* Smooth transition for background color */
+  transition: background-color 0.3s; 
 }
 
 .button:hover {
-  background-color: red; /* Change the background color on hover */
+  background-color: red; 
 }
 
+
+.buttonContainer {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin-top: 1px; 
+  margin-right: 16px;
+}
+
+.play {
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+}

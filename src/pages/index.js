@@ -52,31 +52,42 @@ export default function Home() {
             </div>
           ))}
         </div>
-        <div>
-        {homeTeam && opponentTeam && (
-        <div className={styles.selectedTeams}>
-          <div className={styles.selectedTeam}>
-            <div className={styles.team}>{homeTeam}</div>
-          </div>
-          <h3>vs</h3>
-          <div className={styles.selectedTeam}>
-            <div className={styles.team}>{opponentTeam}</div>
-          </div>
-          {/* <button className={styles.button} onClick={resetSelection}>Reset Selection</button> */}
+        <div className={styles.container}>
+  <div>
+    {homeTeam && opponentTeam && (
+      <div className={styles.selectedTeams}>
+        <div className={styles.homeTeams}>
+          <div className={styles.team}>{homeTeam}</div>
         </div>
-      )}
-      {homeTeam && opponentTeam && (
-        <div className={styles.buttonContainer}>
-        <button className={styles.button} onClick={tossTeams}>
-          toss
-        </button>
+        <h3>vs</h3>
+        <div className={styles.opponentTeams}>
+          <div className={styles.team}>{opponentTeam}</div>
         </div>
-      )}
-      {isToss && (
-        <div className={styles.chooseText}>{winner} won the toss and elected to {text} first
-        <div onClick={playMatch}><h1>Lets play</h1></div></div>
-      )}
+        {/* <button className={styles.button} onClick={resetSelection}>Reset Selection</button> */}
       </div>
+    )}
+  </div>
+  <div>
+    {homeTeam && opponentTeam && (
+      <div className={styles.buttonContainer}>
+        <button className={styles.button} onClick={tossTeams}>
+          Toss
+        </button>
+      </div>
+    )}
+  </div>
+  <div>
+    {isToss && (
+      <div className={styles.chooseText}>
+        {winner} won the toss and elected to {text} first
+        <div onClick={playMatch}>
+          <h1 className={styles.play}>Let's play</h1>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
         <div className={styles.opponentTeams}>
           {teams.map((team, index) => (
             <div
