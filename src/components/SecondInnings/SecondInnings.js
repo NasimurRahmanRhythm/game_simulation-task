@@ -3,26 +3,24 @@ import toast from "react-hot-toast";
 import Commentary from "../Commentary/Commentary";
 import styles from "@/components/SecondInnings/SecondInnings.module.css";
 import Router, { useRouter } from "next/router";
+import { useGame } from "@/libs/providers/GameProvider";
+import { useActionDispatcher } from "@/hooks/useActionDispatcher";
+import { gameActions } from "@/libs/actions/game.actions";
 
 const SecondInnings = ({ first, second, opponentScore }) => {
-  const [strike, setStrike] = useState();
-  const [nonstrike, setNonstrike] = useState();
-  const [bowler, setBowler] = useState();
-  const [bat, setBat] = useState(2);
-  const [over, setOver] = useState(0);
-  const [ballCount, setBallCount] = useState(0);
-  const [ball, setBall] = useState(true);
-  const [run, setRun] = useState();
-  const [totalRun, setTotalRun] = useState(0);
-  const [wicket, setWicket] = useState(0);
   const [batFirst, setBatFirst] = useState("");
   const [batSecond, setBatSecond] = useState("");
-  const [overRun, setOverRun] = useState([]);
-  const [homeBatScoreCard, setHomeBatScoreCard] = useState({});
-  const [opBowlScoreCard, setOpBowlScoreCard] = useState({});
+  const {data3, setData3} = useGame();
+  const {data4, setData4} = useGame();
   const router = useRouter();
 
   const { homeTeam, opponentTeam, winner, tossResult } = router.query;
+  useEffect(() => {
+    setData3({});
+    setData4({});
+
+  }, [])
+  
   useEffect(() => {
     if (
       (homeTeam === winner && tossResult === "bat") ||
@@ -36,36 +34,42 @@ const SecondInnings = ({ first, second, opponentScore }) => {
     }
   }, [homeTeam, winner, opponentTeam, tossResult]);
 
+  const [state, dispatch] = useActionDispatcher({
+    batFirst: '',
+    batSecond: '',
+    strike: '',
+    nonstrike: '',
+    bowler: '',
+    bat: 2,
+    over: 0,
+    ballCount: 0,
+    ball: true,
+    run: null,
+    totalRun: 0,
+    wicket: 0,
+    overRun: [],
+});
+
+  const {strike, nonstrike, bowler, bat, over, ballCount, ball,
+  run, totalRun, wicket, overRun} = state;
+
   const choosePlayer = (player) => {
-    if (homeBatScoreCard[player]?.played === true) {
+    if (data3[player]?.played === true) {
       toast.error("You have already choosen this player");
     } else {
-      if (bat === 0) {
-        toast.error("You have already chosen two players");
-      } else if (bat === 2) {
-        setStrike(player);
-        setBat(bat - 1);
-      } else {
-        if (strike) {
-          setNonstrike(player);
-          setBat(bat - 1);
-        } else {
-          setStrike(player);
-          setBat(bat - 1);
-        }
-      }
+      dispatch(gameActions.CHOOSE_PLAYERS, player);
     }
   };
 
   const chooseBowler = (player) => {
-    if (opBowlScoreCard[player]?.played === true) {
-      toast.error("You have already choosen this bowler");
-    } else {
-      if (ball) {
-        setBowler(player);
-        setBall(false);
-      }
-    }
+    if(data4[player]?.played === true){
+      toast.error('You have already choosen this bowler');
+    }else {
+      dispatch(gameActions.CHOOSE_BOWLER, {
+        bowler: player,
+        ball: false,
+      });
+  }
   };
 
   const play = () => {
@@ -74,35 +78,23 @@ const SecondInnings = ({ first, second, opponentScore }) => {
     } else {
       const runs = [1, 2, 3, 4, 6, "W"];
       const idx = Math.floor(Math.random() * runs.length);
-      setRun(runs[idx]);
-      const newOverRun = [...overRun, runs[idx]];
-      if (newOverRun.length - 1 === 6) {
-        setOverRun([runs[idx]]);
-      } else {
-        setOverRun(newOverRun);
-      }
-      if (runs[idx] !== "W") {
-        setTotalRun(totalRun + runs[idx]);
-      }
-      setBallCount(ballCount + 1);
-      setOver(ballCount / 6);
+      dispatch(gameActions.SCORE_RUN, runs[idx]);
     }
   };
 
   const runScore = () => {
     if (run === 1 || run === 3) {
-      const temp = nonstrike;
-      setNonstrike(strike);
-      setStrike(temp);
+      dispatch(gameActions.STRIKE_ROTATE,{
+        nonstrike: strike,
+        strike: nonstrike,
+      })
     } else if (run === "W") {
-      setWicket(wicket + 1);
-      setBat(1);
-      setStrike("");
+      dispatch(gameActions.WICKET_TAKEN, {
+        wicket: wicket+1,
+        bat: 1,
+        strike: '',
+      });
       console.log("bat is ", bat);
-    }
-    if (ballCount % 6 === 0 && over > 0) {
-      setBowler("");
-      setBall(true);
     }
     console.log("Striker is ", strike);
     console.log("Non Striker is ", nonstrike);
@@ -110,7 +102,7 @@ const SecondInnings = ({ first, second, opponentScore }) => {
 
   useEffect(() => {
     if (run !== "W") {
-      setHomeBatScoreCard((prevScoreCard) => ({
+      setData3((prevScoreCard) => ({
         ...prevScoreCard,
         [strike]: {
           run: (prevScoreCard[strike]?.run || 0) + run,
@@ -123,7 +115,7 @@ const SecondInnings = ({ first, second, opponentScore }) => {
 
   useEffect(() => {
     if (run === "W") {
-      setOpBowlScoreCard((prevScoreCard) => ({
+      setData4((prevScoreCard) => ({
         ...prevScoreCard,
         [bowler]: {
           wicket: (prevScoreCard[bowler]?.wicket || 0) + 1,
@@ -132,7 +124,7 @@ const SecondInnings = ({ first, second, opponentScore }) => {
         },
       }));
     } else {
-      setOpBowlScoreCard((prevScoreCard) => ({
+      setData4((prevScoreCard) => ({
         ...prevScoreCard,
         [bowler]: {
           wicket: prevScoreCard[bowler]?.wicket || 0,
@@ -151,10 +143,6 @@ const SecondInnings = ({ first, second, opponentScore }) => {
     router.push(`/scoreboard?homeTeam=${batFirst}&opponentTeam=${batSecond}`);
   }
 
-  console.log(homeBatScoreCard);
-  console.log(opBowlScoreCard);
-  localStorage.setItem("teamBBat", JSON.stringify(homeBatScoreCard));
-  localStorage.setItem("teamABowl", JSON.stringify(opBowlScoreCard));
   return (
     <div>
       <div className={styles.container}>

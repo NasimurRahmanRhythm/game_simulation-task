@@ -3,6 +3,7 @@ import teams from '@/libs/teams';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { useGame } from '@/libs/providers/GameProvider';
 
 export default function Home() {
   const [homeTeam, setHomeTeam] = useState('');
@@ -12,13 +13,14 @@ export default function Home() {
   const [winner,setWinner] = useState('');
   const router = useRouter();
 
+
   const selectTeam = (team, isHomeTeam) => {
     if (isHomeTeam) {
-      setHomeTeam(team);
-      toast.success('Home team selected');
-      console.log(team);
+      if(team!==opponentTeam)setHomeTeam(team);
+      else toast.error('You have chosen same two teams');
     } else {
-      setOpponentTeam(team);
+      if(team!==homeTeam)setOpponentTeam(team);
+      else toast.error('You have chosen same two teams');
     }
   };
 

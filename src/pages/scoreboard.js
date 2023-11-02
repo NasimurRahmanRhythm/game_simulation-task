@@ -1,37 +1,35 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import styles from '@/styles/ScoreBoard.module.css'
+import { useGame } from '@/libs/providers/GameProvider';
 
 const Scoreboard = () => {
     const router = useRouter();
-    const data1 = JSON.parse(localStorage.getItem("teamABat"));
-    const data2 = JSON.parse(localStorage.getItem("teamBBowl"));
-    const data3 = JSON.parse(localStorage.getItem("teamBBat"));
-    const data4 = JSON.parse(localStorage.getItem("teamABowl"));
+    const {data1, data2, data3, data4} = useGame();
 
     const filteredData1 = Object.keys(data1)
-        .filter(key => key !== "undefined")
+        .filter(key => key !== "")
         .map(player => ({
             name: player,
             data: `${data1[player].run}(${data1[player].ball})`,
         }));
     
     const filteredData2 = Object.keys(data2)
-        .filter(key => key !== "undefined")
+        .filter(key => key !== "")
         .map(player => ({
             name: player,
             data: `${data2[player].wicket}/${data2[player].run}`,
         }));
 
     const filteredData3 = Object.keys(data3)
-        .filter(key => key !== "undefined")
+        .filter(key => key !== "")
         .map(player => ({
             name: player,
             data: `${data3[player].run}(${data3[player].ball})`,
         }));
 
     const filteredData4 = Object.keys(data4)
-        .filter(key => key !== "undefined")
+        .filter(key => key !== "")
         .map(player => ({
             name: player,
             data: `${data4[player].wicket}/${data4[player].run}`,

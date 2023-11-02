@@ -1,6 +1,12 @@
-import '@/styles/globals.css'
-import { Toaster } from 'react-hot-toast'
+import { GameProvider } from "@/libs/providers/GameProvider";
+import "@/styles/globals.css";
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }) {
-  return <div><Toaster/><Component {...pageProps} /></div>
+  return (
+    <GameProvider>
+      <Toaster />
+      <Component {...pageProps} />
+    </GameProvider>
+  );
 }
